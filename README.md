@@ -2,6 +2,10 @@
 
 This is ***unofficial*** DCGAN implemented with Keras.
 
+MNIST examples ... Success!!
+Cifar10, Original ... Unsuccess :(
+
+If you succeed, please tell me!!
 
 ## Requirements
 

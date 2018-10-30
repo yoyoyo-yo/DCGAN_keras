@@ -72,11 +72,8 @@ $ python main_cifar10.py --test
 This is work-in-progress.
 
 You collected images you want to generate in a directory.
-
 You can change directory path **Train_dirs** in *config.py*.
-
 You can set one or more passes.
-
 For example, 
 ```python
 Train_dirs = [

@@ -3,7 +3,7 @@ import os
 ## Network config
 ##  Input width and Height
 #Height, Width = 28, 28  # MNIST
-Height, Width = 64, 64
+Height, Width = 128, 128
 Channel = 3
 
 # input data shape
@@ -12,7 +12,8 @@ Input_type = 'channels_last'
 
 ## Directory paths for training
 Train_dirs = [
-    '/mnt/c/Users/demo/Research_nagayosi/Dataset/Moca',
+#    '/mnt/c/Users/demo/Research_nagayosi/Dataset/Moca',
+    '/mnt/c/Users/demo/Research_nagayosi/Dataset/text_image'
 ]
 
 ## Data augmentation
@@ -23,8 +24,8 @@ Rotate_ccw90 = False
 File_extensions = ['.jpg', '.png']
 
 ## Training config
-Step = 5000
-Minibatch = 64
+Iteration = 50000
+Minibatch = 128
 
 ## Test config
 ## The total number of generated images is Test_Minibatch * Test_num
@@ -37,6 +38,9 @@ Save_test_img_dir = 'test_images'
 # if None, generated image is not stored
 Save_train_combine = True
 Save_test_combine = True
+
+Save_train_step = 20
+Save_iteration_disp = True
 
 ## Save config
 Save_dir = 'models'

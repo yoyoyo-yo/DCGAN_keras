@@ -14,32 +14,32 @@ def G_model(Height, Width, channel=3):
     x = Dense(in_h * in_w * d_dim, name='g_dense1',
         kernel_initializer=RN(mean=0.0, stddev=0.02), use_bias=False)(inputs)
     x = Reshape((in_h, in_w, d_dim), input_shape=(d_dim * in_h * in_w,))(x)
-    x = BatchNormalization(momentum=0.9, epsilon=1e-5, name='g_dense1_bn')(x)
     x = Activation('relu')(x)
+    x = BatchNormalization(momentum=0.9, epsilon=1e-5, name='g_dense1_bn')(x)
     # 1/8
     #x = UpSampling2D(size=(2, 2))(x)
     x = Conv2DTranspose(512, (5, 5), name='g_conv1', padding='same', strides=(2,2),
         kernel_initializer=RN(mean=0.0, stddev=0.02), use_bias=False)(x)
     #x = Conv2D(256, (5, 5), padding='same', name='g_conv1',
     #    kernel_initializer=RN(mean=0.0, stddev=0.02), bias_initializer=Constant())(x)
-    x = BatchNormalization(momentum=0.9, epsilon=1e-5, name='g_conv1_bn')(x)
     x = Activation('relu')(x)
+    x = BatchNormalization(momentum=0.9, epsilon=1e-5, name='g_conv1_bn')(x)
     # 1/4
     #x = UpSampling2D(size=(2, 2))(x)
     x = Conv2DTranspose(256, (5, 5), name='g_conv2', padding='same', strides=(2,2),
         kernel_initializer=RN(mean=0.0, stddev=0.02), use_bias=False)(x)
     #x = Conv2D(128, (5, 5), padding='same', name='g_conv2',
     #    kernel_initializer=RN(mean=0.0, stddev=0.02), bias_initializer=Constant())(x)
-    x = BatchNormalization(momentum=0.9, epsilon=1e-5, name='g_conv2_bn')(x)
     x = Activation('relu')(x)
+    x = BatchNormalization(momentum=0.9, epsilon=1e-5, name='g_conv2_bn')(x)
     # 1/2
     #x = UpSampling2D(size=(2, 2))(x)
     x = Conv2DTranspose(128, (5, 5), name='g_conv3', padding='same', strides=(2,2),
         kernel_initializer=RN(mean=0.0, stddev=0.02), use_bias=False)(x)
     #x = Conv2D(64, (5, 5), padding='same', name='g_conv3',
     #    kernel_initializer=RN(mean=0.0, stddev=0.02), bias_initializer=Constant())(x)
-    x = BatchNormalization(momentum=0.9, epsilon=1e-5, name='g_conv3_bn')(x)
     x = Activation('relu')(x)
+    x = BatchNormalization(momentum=0.9, epsilon=1e-5, name='g_conv3_bn')(x)
     # 1/1
     #x = UpSampling2D(size=(2, 2))(x)
     x = Conv2DTranspose(channel, (5, 5), name='g_out', padding='same', strides=(2,2),
@@ -52,29 +52,29 @@ def G_model(Height, Width, channel=3):
 
 def D_model(Height, Width, channel=3):
     inputs = Input((Height, Width, channel))
-    x = Conv2D(64, (5, 5), padding='same', strides=(2,2), name='d_conv1',
+    x = Conv2D(32, (5, 5), padding='same', strides=(2,2), name='d_conv1',
         kernel_initializer=RN(mean=0.0, stddev=0.02), use_bias=False)(inputs)
     #x = InstanceNormalization()(x)
     #x = BatchNormalization(momentum=0.9, epsilon=1e-5, name='d_conv1_bn')(x)
     x = LeakyReLU(alpha=0.2)(x)
-    x = Conv2D(128, (5, 5), padding='same', strides=(2,2), name='d_conv2',
+    x = Conv2D(64, (5, 5), padding='same', strides=(2,2), name='d_conv2',
         kernel_initializer=RN(mean=0.0, stddev=0.02), use_bias=False)(x)
     #x = BatchNormalization(momentum=0.9, epsilon=1e-5, name='d_conv2_bn')(x)
     #x = InstanceNormalization()(x)
     x = LeakyReLU(alpha=0.2)(x)
-    x = Conv2D(256, (5, 5), padding='same', strides=(2,2), name='d_conv3',
+    x = Conv2D(128, (5, 5), padding='same', strides=(2,2), name='d_conv3',
         kernel_initializer=RN(mean=0.0, stddev=0.02), use_bias=False)(x)
     #x = BatchNormalization(momentum=0.9, epsilon=1e-5, name='d_conv3_bn')(x)
     #x = InstanceNormalization()(x)
     x = LeakyReLU(alpha=0.2)(x)
-    x = Conv2D(512, (5, 5), padding='same', strides=(2,2), name='d_conv4',
+    x = Conv2D(256, (5, 5), padding='same', strides=(2,2), name='d_conv4',
         kernel_initializer=RN(mean=0.0, stddev=0.02), use_bias=False)(x)
     #x = BatchNormalization(momentum=0.9, epsilon=1e-5, name='d_conv4_bn')(x)
     #x = InstanceNormalization()(x)
     x = LeakyReLU(alpha=0.2)(x)
     x = Flatten()(x)
-    x = Dense(2048, activation='relu', name='d_dense1',
-        kernel_initializer=RN(mean=0.0, stddev=0.02), bias_initializer=Constant())(x)
+    #x = Dense(2048, activation='relu', name='d_dense1',
+    #    kernel_initializer=RN(mean=0.0, stddev=0.02), bias_initializer=Constant())(x)
     x = Dense(1, activation='sigmoid', name='d_out',
         kernel_initializer=RN(mean=0.0, stddev=0.02), bias_initializer=Constant())(x)
     model = Model(inputs=inputs, outputs=x, name='D')

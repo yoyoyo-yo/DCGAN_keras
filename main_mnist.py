@@ -69,13 +69,13 @@ class Main_train():
 
         fname = os.path.join(cf.Save_dir, 'loss.txt')
         f = open(fname, 'w')
-        f.write("Step,G_loss,D_loss{}".format(os.linesep))
+        f.write("Iteration,G_loss,D_loss{}".format(os.linesep))
 
-        for step in range(cf.Step):
-            step += 1
+        for ite in range(cf.Iteration):
+            ite += 1
             # Discremenator training
             #y = dl_train.get_minibatch(shuffle=True)
-            train_ind = step % (train_num_per_step - 1)
+            train_ind = ite % (train_num_per_step - 1)
             y = X_train[train_ind * cf.Minibatch: (train_ind+1) * cf.Minibatch]
             #input_noise = np.random.uniform(-1, 1, size=(cf.Minibatch, 100))
             input_noise = np.random.normal(0, 0.3, size=(cf.Minibatch, 100))
@@ -89,30 +89,30 @@ class Main_train():
             g_loss = c.train_on_batch(input_noise, [1] * cf.Minibatch)
 
             con = '|'
-            if step % 10 != 0:
-                for i in range(step%10):
+            if ite % cf.Save_train_step != 0:
+                for i in range(ite % cf.Save_train_step):
                     con += '>'
-                for i in range(10 - step%10):
+                for i in range(cf.Save_train_step - ite % cf.Save_train_step):
                     con += ' '
             else:
-                for i in range(10):
+                for i in range(cf.Save_train_step):
                     con += '>'
             con += '| '
-            con += "Step:{}, g: {:.6f}, d: {:.6f} ".format(step, g_loss, d_loss)
+            con += "Ite:{}, g: {:.6f}, d: {:.6f} ".format(ite, g_loss, d_loss)
             sys.stdout.write("\r"+con)
 
-            if step % 10 == 0 or step == 1:
+            if ite % cf.Save_train_step == 0 or ite == 1:
                 print()
-                f.write("{},{},{}{}".format(step, g_loss, d_loss, os.linesep))
+                f.write("{},{},{}{}".format(ite, g_loss, d_loss, os.linesep))
                 # save weights
                 d.save_weights(cf.Save_d_path)
                 g.save_weights(cf.Save_g_path)
 
                 # save some samples
                 if cf.Save_train_combine is True:
-                    save_images(g_output, index=step, dir_path=cf.Save_train_img_dir)
+                    save_images(g_output, index=ite, dir_path=cf.Save_train_img_dir)
                 elif cf.Save_train_combine is False:
-                    save_images_separate(g_output, index=step, dir_path=cf.Save_train_img_dir)
+                    save_images_separate(g_output, index=ite, dir_path=cf.Save_train_img_dir)
         f.close()
         ## Save trained model
         d.save_weights(cf.Save_d_path)
@@ -162,7 +162,11 @@ def save_images(imgs, index, dir_path):
         out[y*H:(y+1)*H, x*W:(x+1)*W] = batch[i]
     fname = str(index).zfill(len(str(cf.Step))) + '.jpg'
     save_path = os.path.join(dir_path, fname)
-    cv2.imwrite(save_path, out)
+    plt.imshow(out)
+    if cf.Save_iteration_disp:
+        plt.title("iteration: {}".format(index))
+    plt.savefig(save_path)
+    #cv2.imwrite(save_path, out)
 
 
 def save_images_separate(imgs, index, dir_path):

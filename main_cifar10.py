@@ -32,29 +32,25 @@ class Main_train():
         pass
 
     def train(self):
+        g_opt = keras.optimizers.Adam(lr=0.0002, beta_1=0.5)
+        d_opt = keras.optimizers.Adam(lr=0.0002, beta_1=0.5)
         ## Load network model
         g = G_model(Height=Height, Width=Width, channel=Channel)
         d = D_model(Height=Height, Width=Width, channel=Channel)
-        c = Combined_model(g=g, d=d)
-
-        g_opt = keras.optimizers.Adam(lr=0.0002, beta_1=0.5)
-        d_opt = keras.optimizers.Adam(lr=0.0002, beta_1=0.5)
-
-        g.compile(loss='binary_crossentropy', optimizer='SGD')
-        d.trainable = False
-        for layer in d.layers:
-            layer.trainable = False
-        c.compile(loss='binary_crossentropy', optimizer=g_opt)
         d.trainable = True
         for layer in d.layers:
             layer.trainable = True
         d.compile(loss='binary_crossentropy', optimizer=d_opt)
+        g.compile(loss='binary_crossentropy', optimizer=d_opt)
+        d.trainable = False
+        for layer in d.layers:
+            layer.trainable = False
+        c = Combined_model(g=g, d=d)
+        c.compile(loss='binary_crossentropy', optimizer=g_opt)
 
         ## Prepare Training data
         #dl_train = DataLoader(phase='Train', shuffle=True)
         (X_train, y_train), (X_test, y_test) = cifar10.load_data()
-        plt.imshow(X_train[0])
-        plt.show()
         X_train = (X_train.astype(np.float32) / 127.5) - 1.
         #X_train = X_train[:, :, :, None]
         train_num = X_train.shape[0]
@@ -71,53 +67,55 @@ class Main_train():
 
         fname = os.path.join(cf.Save_dir, 'loss.txt')
         f = open(fname, 'w')
-        f.write("Step,G_loss,D_loss{}".format(os.linesep))
+        f.write("Iteration,G_loss,D_loss{}".format(os.linesep))
 
-        for step in range(cf.Step):
-            step += 1
+        for ite in range(cf.Iteration):
+            ite += 1
             # Discremenator training
             #y = dl_train.get_minibatch(shuffle=True)
-            train_ind = step % (train_num_per_step - 1)
+            train_ind = ite % (train_num_per_step - 1)
             y = X_train[train_ind * cf.Minibatch: (train_ind+1) * cf.Minibatch]
             input_noise = np.random.uniform(-1, 1, size=(cf.Minibatch, 100))
             #input_noise = np.random.normal(0, 0.3, size=(cf.Minibatch, 100))
             g_output = g.predict(input_noise, verbose=0)
             X = np.concatenate((y, g_output))
             Y = [1] * cf.Minibatch + [0] * cf.Minibatch
-            #d_loss = d.train_on_batch(X, Y)
-            d_loss = d.train_on_batch(y, [1] * cf.Minibatch)
-            d_loss = d.train_on_batch(g_output, [0] * cf.Minibatch)
+            d_loss = d.train_on_batch(X, Y)
+            #d_loss = d.train_on_batch(y, [1] * cf.Minibatch)
+            #d_loss = d.train_on_batch(g_output, [0] * cf.Minibatch)
             # Generator training
             input_noise = np.random.uniform(-1, 1, size=(cf.Minibatch, 100))
             #input_noise = np.random.normal(0, 0.3, size=(cf.Minibatch, 100))
             g_loss = c.train_on_batch(input_noise, [1] * cf.Minibatch)
 
+            ite_mod = ite % cf.Save_train_step
             con = '|'
-            if step % 10 != 0:
-                for i in range(step%10):
+            if ite_mod != 0:
+                for i in range(ite_mod):
                     con += '>'
-                for i in range(10 - step%10):
+                for i in range(cf.Save_train_step - ite_mod):
                     con += ' '
             else:
-                for i in range(10):
+                for i in range(cf.Save_train_step):
                     con += '>'
             con += '| '
-            con += "Step:{}, g: {:.6f}, d: {:.6f} ".format(step, g_loss, d_loss)
+            con += "Step:{}, g: {:.6f}, d: {:.6f} ".format(ite, g_loss, d_loss)
             sys.stdout.write("\r"+con)
 
-            if step % 10 == 0 or step == 1:
+            if ite_mod == 0 or ite == 1:
                 print()
                 #print("Step:{}, g: {:.6f}, d: {:.6f} ".format(step, g_loss, d_loss), end="")
-                f.write("{},{},{}{}".format(step, g_loss, d_loss, os.linesep))
+                f.write("{},{},{}{}".format(ite, g_loss, d_loss, os.linesep))
                 # save weights
                 d.save_weights(cf.Save_d_path)
                 g.save_weights(cf.Save_g_path)
 
+                g_output = g.predict(input_noise, verbose=0)
                 # save some samples
                 if cf.Save_train_combine is True:
-                    save_images(g_output, index=step, dir_path=cf.Save_train_img_dir)
+                    save_images(g_output, index=ite, dir_path=cf.Save_train_img_dir)
                 elif cf.Save_train_combine is False:
-                    save_images_separate(g_output, index=step, dir_path=cf.Save_train_img_dir)
+                    save_images_separate(g_output, index=ite, dir_path=cf.Save_train_img_dir)
 
         f.close()
         ## Save trained model
@@ -168,9 +166,16 @@ def save_images(imgs, index, dir_path):
         x = i % w_num
         y = i // w_num
         out[y*H:(y+1)*H, x*W:(x+1)*W] = batch[i]
-    fname = str(index).zfill(len(str(cf.Step))) + '.jpg'
+    fname = str(index).zfill(len(str(cf.Iteration))) + '.jpg'
     save_path = os.path.join(dir_path, fname)
-    cv2.imwrite(save_path, out)
+
+    if cf.Save_iteration_disp:
+        plt.imshow(out)
+        plt.title("iteration: {}".format(index))
+        plt.axis("off")
+        plt.savefig(save_path)
+    else:
+        cv2.imwrite(save_path, out)
 
 def save_images_separate(imgs, index, dir_path):
     # Argment

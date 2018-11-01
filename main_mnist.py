@@ -77,15 +77,15 @@ class Main_train():
             #y = dl_train.get_minibatch(shuffle=True)
             train_ind = ite % (train_num_per_step - 1)
             y = X_train[train_ind * cf.Minibatch: (train_ind+1) * cf.Minibatch]
-            #input_noise = np.random.uniform(-1, 1, size=(cf.Minibatch, 100))
-            input_noise = np.random.normal(0, 0.3, size=(cf.Minibatch, 100))
+            input_noise = np.random.uniform(-1, 1, size=(cf.Minibatch, 100))
+            #input_noise = np.random.normal(0, 0.3, size=(cf.Minibatch, 100))
             g_output = g.predict(input_noise, verbose=0)
             X = np.concatenate((y, g_output))
             Y = [1] * cf.Minibatch + [0] * cf.Minibatch
             d_loss = d.train_on_batch(X, Y)
             # Generator training
-            #input_noise = np.random.uniform(-1, 1, size=(cf.Minibatch, 100))
-            input_noise = np.random.normal(0, 0.3, size=(cf.Minibatch, 100))
+            input_noise = np.random.uniform(-1, 1, size=(cf.Minibatch, 100))
+            #input_noise = np.random.normal(0, 0.3, size=(cf.Minibatch, 100))
             g_loss = c.train_on_batch(input_noise, [1] * cf.Minibatch)
 
             con = '|'
@@ -108,6 +108,7 @@ class Main_train():
                 d.save_weights(cf.Save_d_path)
                 g.save_weights(cf.Save_g_path)
 
+                g_output = g.predict(input_noise, verbose=0)
                 # save some samples
                 if cf.Save_train_combine is True:
                     save_images(g_output, index=ite, dir_path=cf.Save_train_img_dir)
@@ -147,6 +148,7 @@ class Main_test():
                 save_images_separate(g_output, index=i, dir_path=cf.Save_test_img_dir)
             pbar.update(1)
 
+
 def save_images(imgs, index, dir_path):
     # Argment
     #  img_batch = np.array((batch, height, width, channel)) with value range [-1, 1]
@@ -155,18 +157,21 @@ def save_images(imgs, index, dir_path):
     batch = batch.astype(np.uint8)
     w_num = np.ceil(np.sqrt(B)).astype(np.int)
     h_num = int(np.ceil(B / w_num))
-    out = np.zeros((h_num*H, w_num*W, C), dtype=np.uint8)
+    out = np.zeros((h_num*H, w_num*W), dtype=np.uint8)
     for i in range(B):
         x = i % w_num
         y = i // w_num
-        out[y*H:(y+1)*H, x*W:(x+1)*W] = batch[i]
-    fname = str(index).zfill(len(str(cf.Step))) + '.jpg'
+        out[y*H:(y+1)*H, x*W:(x+1)*W] = batch[i, ..., 0]
+    fname = str(index).zfill(len(str(cf.Iteration))) + '.jpg'
     save_path = os.path.join(dir_path, fname)
-    plt.imshow(out)
+
     if cf.Save_iteration_disp:
+        plt.imshow(out, cmap='gray')
         plt.title("iteration: {}".format(index))
-    plt.savefig(save_path)
-    #cv2.imwrite(save_path, out)
+        plt.axis("off")
+        plt.savefig(save_path)
+    else:
+        cv2.imwrite(save_path, out)
 
 
 def save_images_separate(imgs, index, dir_path):

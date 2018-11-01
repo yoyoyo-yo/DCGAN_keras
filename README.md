@@ -44,7 +44,8 @@ Generated images are stored in **test_images** directory. (This pass is defined 
 
 
 |Training process|Iteration 3000|
-|![alt tag](assets/mnist_result.gif)|![](assets/mnist_3000.jpg)|
+|---|---|
+|![](assets/mnist_result.gif)|![](assets/mnist_3000.jpg)|
 
 ## Cifar10 example
 

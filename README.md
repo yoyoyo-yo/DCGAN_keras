@@ -28,11 +28,13 @@ When training,
 $ python main_mnist.py --train
 ```
 
-The trained models (Generator and Discreminator) are stored in **models** directory.(This directory will be made automatically)
+The trained models (Generator and Discreminator) are stored in **models_mnist** directory.(This directory will be made automatically)
 
-You can change above directory and other path in **config.py**
+You can change above directory and other path in **config_mnist.py**
 
-Generated images in training process are stored in **train_images** directory. (This path is defined in **config.py**)
+Generated images in training process are stored in **train_images_mnist** directory (This path is defined in **config_mnist.py**), and the ones in test are stored in **test_images_mnist**
+
+The models are defined in **model_mnist.py**
 
 When testing,
 
@@ -49,7 +51,15 @@ Generated images are stored in **test_images** directory. (This pass is defined 
 
 ## Cifar10 example
 
-This is work-in-progress (unsuccessful).
+The models are defined by **model_cifar10.py**
+
+Generated images in training process are stored in **train_image_cifar10** (defined in **config_cifar10.py**)
+
+Generated images in test are stored in **test_image_cifar10** (defined in **config_cifar10.py**)
+
+|Training process|Iteration 30000|
+|---|---|
+|![](assets/cifar10_result.gif)|![](assets/cifar10_30000.jpg)|
 
 When training,
 

@@ -43,12 +43,12 @@ Save_train_step = 20
 Save_iteration_disp = True
 
 ## Save config
-Save_dir = 'models_mnist'
+Save_dir = 'models'
 Save_d_name = 'D.h5'
 Save_g_name = 'G.h5'
 Save_d_path = os.path.join(Save_dir, Save_d_name)
 Save_g_path = os.path.join(Save_dir, Save_g_name)
-Save_train_img_dir = 'train_images_mnist'
+Save_train_img_dir = 'train_images'
 Save_img_num = 5
 
 ## Other config

@@ -144,17 +144,16 @@ class DataLoader():
         return image
 
     def data_augmentation(self):
-        print('   ||   -*- Data Augmentation -*-')
+        print('   |   -*- Data Augmentation -*-')
         if cf.Horizontal_flip:
             self.add_horizontal_flip()
-            print('   ||    - Added horizontal flip')
+            print('   |    - Added horizontal flip')
         if cf.Vertical_flip:
             self.add_vertical_flip()
-            print('   ||    - Added vertival flip')
+            print('   |    - Added vertival flip')
         if cf.Rotate_ccw90:
             self.add_rotate_ccw90()
-            print('   ||    - Added Rotate ccw90')
-        print('  \  /')
+            print('   |    - Added Rotate ccw90')
         print('   \/')
 
 

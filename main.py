@@ -24,7 +24,6 @@ from model import *
 
 np.random.seed(cf.Random_seed)
 
-from keras.datasets import cifar10
 Height, Width = cf.Height, cf.Width
 Channel = cf.Channel
 
@@ -33,23 +32,21 @@ class Main_train():
         pass
 
     def train(self):
+        g_opt = keras.optimizers.Adam(lr=0.0001, beta_1=0.5)
+        d_opt = keras.optimizers.Adam(lr=0.0001, beta_1=0.5)
         ## Load network model
         g = G_model(Height=Height, Width=Width, channel=Channel)
         d = D_model(Height=Height, Width=Width, channel=Channel)
-        c = Combined_model(g=g, d=d)
-
-        g_opt = keras.optimizers.Adam(lr=0.0002, beta_1=0.5)
-        d_opt = keras.optimizers.Adam(lr=0.0002, beta_1=0.5)
-
-        g.compile(loss='binary_crossentropy', optimizer='SGD')
-        d.trainable = False
-        for layer in d.layers:
-            layer.trainable = False
-        c.compile(loss='binary_crossentropy', optimizer=g_opt)
         d.trainable = True
         for layer in d.layers:
             layer.trainable = True
         d.compile(loss='binary_crossentropy', optimizer=d_opt)
+        g.compile(loss='binary_crossentropy', optimizer=d_opt)
+        d.trainable = False
+        for layer in d.layers:
+            layer.trainable = False
+        c = Combined_model(g=g, d=d)
+        c.compile(loss='binary_crossentropy', optimizer=g_opt)
 
         ## Prepare Training data
         dl_train = DataLoader(phase='Train', shuffle=True)
@@ -71,15 +68,15 @@ class Main_train():
             ite += 1
             # Discremenator training
             y = dl_train.get_minibatch(shuffle=True)
-            #input_noise = np.random.uniform(-1, 1, size=(cf.Minibatch, 100))
-            input_noise = np.random.normal(0, 0.3, size=(cf.Minibatch, 100))
+            input_noise = np.random.uniform(-1, 1, size=(cf.Minibatch, 100))
+            #input_noise = np.random.normal(0, 0.3, size=(cf.Minibatch, 100))
             g_output = g.predict(input_noise, verbose=0)
             X = np.concatenate((y, g_output))
             Y = [1] * cf.Minibatch + [0] * cf.Minibatch
             d_loss = d.train_on_batch(X, Y)
             # Generator training
-            #input_noise = np.random.uniform(-1, 1, size=(cf.Minibatch, 100))
-            input_noise = np.random.normal(0, 0.3, size=(cf.Minibatch, 100))
+            input_noise = np.random.uniform(-1, 1, size=(cf.Minibatch, 100))
+            #input_noise = np.random.normal(0, 0.3, size=(cf.Minibatch, 100))
             g_loss = c.train_on_batch(input_noise, [1] * cf.Minibatch)
 
             con = '|'
@@ -92,7 +89,7 @@ class Main_train():
                 for i in range(cf.Save_train_step):
                     con += '>'
             con += '| '
-            con += "Step:{}, g: {:.6f}, d: {:.6f} ".format(ite, g_loss, d_loss)
+            con += "Step:{}, g: {:.9f}, d: {:.9f} ".format(ite, g_loss, d_loss)
             sys.stdout.write("\r"+con)
 
             if ite % cf.Save_train_step == 0 or ite == 1:
@@ -102,6 +99,7 @@ class Main_train():
                 d.save_weights(cf.Save_d_path)
                 g.save_weights(cf.Save_g_path)
 
+                g_output = g.predict(input_noise, verbose=0)
                 # save some samples
                 if cf.Save_train_combine is True:
                     save_images(g_output, index=ite, dir_path=cf.Save_train_img_dir)
@@ -157,13 +155,15 @@ def save_images(imgs, index, dir_path):
         x = i % w_num
         y = i // w_num
         out[y*H:(y+1)*H, x*W:(x+1)*W] = batch[i]
-    fname = str(index).zfill(len(str(cf.Step))) + '.jpg'
+    fname = str(index).zfill(len(str(cf.Iteration))) + '.jpg'
     save_path = os.path.join(dir_path, fname)
-    plt.imshow(out)
     if cf.Save_iteration_disp:
+        plt.imshow(out)
         plt.title("iteration: {}".format(index))
-    plt.savefig(save_path)
-    #cv2.imwrite(save_path, out)
+        plt.axis("off")
+        plt.savefig(save_path)
+    else:
+        cv2.imwrite(save_path, out)
 
 def save_images_separate(imgs, index, dir_path):
     # Argment

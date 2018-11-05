@@ -3,7 +3,7 @@ import os
 ## Network config
 ##  Input width and Height
 #Height, Width = 28, 28  # MNIST
-Height, Width = 128, 128
+Height, Width = 64, 64
 Channel = 3
 
 # input data shape
@@ -12,8 +12,12 @@ Input_type = 'channels_last'
 
 ## Directory paths for training
 Train_dirs = [
+    '/home/usrs/nagayosi/Dataset/Moca',
+#    '/home/usrs/nagayosi/Dataset/Tsugumi',
+#    '/home/usrs/nagayosi/Dataset/Tsumugi',
+#    '/home/usrs/nagayosi/Dataset/Megumi',
 #    '/mnt/c/Users/demo/Research_nagayosi/Dataset/Moca',
-    '/mnt/c/Users/demo/Research_nagayosi/Dataset/text_image'
+#    '/mnt/c/Users/demo/Research_nagayosi/Dataset/text_image'
 ]
 
 ## Data augmentation
@@ -24,8 +28,8 @@ Rotate_ccw90 = False
 File_extensions = ['.jpg', '.png']
 
 ## Training config
-Iteration = 3000
-Minibatch = 128
+Iteration = 10000
+Minibatch = 64
 
 ## Test config
 ## The total number of generated images is Test_Minibatch * Test_num

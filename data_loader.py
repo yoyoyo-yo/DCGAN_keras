@@ -23,9 +23,10 @@ class DataLoader():
         print('------------\nData Load (phase: {})'.format(self.phase))
 
         for dir_path in dir_paths:
-            files1 = glob.glob(dir_path + '/*.jpg')
-            files2 = glob.glob(dir_path + '/*.png')
-            files = files1 + files2
+            files = []
+            for ext in cf.File_extensions:
+                files += glob.glob(dir_path + '/*' + ext)
+                
             load_count = 0
             for img_path in files:
                 if cv2.imread(img_path) is None:

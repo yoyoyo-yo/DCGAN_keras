@@ -12,15 +12,15 @@ This is ***unofficial*** DCGAN implemented with Keras.
 
 You can get python packages.
 
-I recommend using Python3, and ***strongly recommend GPU when training (cifar10, original your own dataset with large iteration, minibatch and size ( >= 32x32)***.
+I recommend using Python3, and ***strongly recommend GPU when training (cifar10, original your own dataset with large iteration, minibatch and size ( >= 32x32).***
 
-When use CPU
+When using CPU
 
 ```bash
 $ pip install -r requirements.txt
 ```
 
-When use GPU
+When using GPU
 
 ```bash
 $ pip install -r requirements_gpu.txt

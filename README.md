@@ -4,7 +4,7 @@ This is ***unofficial*** DCGAN implemented with Keras.
 
 **MNIST, Cifar10 ... Success!!**
 
-**Original ... Unsuccess :(**
+**Original ... Unsuccess :(** (work in progress)
 
 ***If you succeed, please tell me!!***
 

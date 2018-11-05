@@ -18,8 +18,8 @@ import matplotlib.pyplot as plt
 import sys
 from tqdm import tqdm
 
-import config as cf
-from model import *
+import config_cifar10 as cf
+from model_cifar10 import *
 
 np.random.seed(cf.Random_seed)
 

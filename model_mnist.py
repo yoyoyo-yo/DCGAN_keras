@@ -2,8 +2,6 @@ import keras
 from keras.models import Sequential, Model
 from keras.layers import Conv2D, MaxPooling2D, Dense, Dropout, Activation, Flatten, Input, BatchNormalization, Reshape, UpSampling2D
 
-import config as cf
-
 
 def G_model(Height, Width, channel=3):
     inputs = Input((100,))

@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 import sys
 from tqdm import tqdm
 
-import config as cf
+import config_mnist as cf
 from model_mnist import *
 
 np.random.seed(cf.Random_seed)

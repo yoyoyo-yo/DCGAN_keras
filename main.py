@@ -38,8 +38,8 @@ class Main_train():
         d = D_model(Height=Height, Width=Width, channel=Channel)
         c = Combined_model(g=g, d=d)
 
-        g_opt = keras.optimizers.Adam(lr=0.002, beta_1=0.5)
-        d_opt = keras.optimizers.Adam(lr=0.002, beta_1=0.5)
+        g_opt = keras.optimizers.Adam(lr=0.0002, beta_1=0.5)
+        d_opt = keras.optimizers.Adam(lr=0.0002, beta_1=0.5)
 
         g.compile(loss='binary_crossentropy', optimizer='SGD')
         d.trainable = False

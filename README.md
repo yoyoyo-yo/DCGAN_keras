@@ -2,9 +2,9 @@
 
 This is ***unofficial*** DCGAN implemented with Keras.
 
-**MNIST ... Success!!**
+**MNIST, Cifar10 ... Success!!**
 
-**Cifar10, Original ... Unsuccess :(**
+**Original ... Unsuccess :(**
 
 ***If you succeed, please tell me!!***
 

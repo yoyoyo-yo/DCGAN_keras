@@ -2,11 +2,7 @@
 
 This is ***unofficial*** DCGAN implemented with Keras.
 
-**MNIST, Cifar10 ... Success!!**
-
-**Original ... Unsuccess :(** (work in progress)
-
-***If you succeed, please tell me!!***
+I confirmed using MNIST, CIFAR10 and Oxford IIIT pet dataset.
 
 ## Requirements
 
@@ -83,11 +79,12 @@ $ python main_cifar10.py --test
 
 ## Original data training
 
-This is work-in-progress.
+You collect images and put them to any directory.
 
-You collected images you want to generate in a directory.
+***I strongly recommend the number of image is more than 300.***
+
 You can change directory path **Train\_dirs** in **config.py**.
-You can set one or more passes.
+You can set one or more absolute passes.
 For example, 
 ```python
 Train_dirs = [
@@ -102,8 +99,20 @@ When training,
 $ python main.py --train
 ```
 
-When testin,
+When testing,
 
 ```bash
 $ python main.py --test
 ```
+
+The models are defined by **model.py**
+
+Generated images in training process are stored in **train_image** (defined in **config.py**)
+
+Generated images in test are stored in **test_image** (defined in **config.py**)
+
+Example of Oxford IIIT Pet dataset [ http://www.robots.ox.ac.uk/~vgg/data/pets/ ]
+
+Training process|Iteration 20000, 128x128|
+|---|---|
+|![](assets/iiit_pet_result.gif)|![](assets/iiit_pet_20000.jpg)|

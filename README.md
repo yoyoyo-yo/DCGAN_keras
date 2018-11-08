@@ -3,6 +3,7 @@
 This is ***unofficial*** DCGAN implemented with Keras.
 
 I confirmed using MNIST, CIFAR10 and Oxford IIIT pet dataset.
+This can train DCGAN with your own dataset.
 
 ## Requirements
 
@@ -85,11 +86,12 @@ When testing,
 $ python main_cifar10.py --test
 ```
 
-## Original data training
+## Your own data training
 
 You collect images and put them to any directory.
 
 ***I strongly recommend the number of image is more than 300.***
+If data is less (e.g. 100), DCGAN generates same images independent on iteration.
 
 You can change directory path **Train\_dirs** in **config.py**.
 You can set one or more absolute passes.

@@ -50,7 +50,7 @@ $ python main_mnist.py --test
 Generated images are stored in **test_images** directory. (This pass is defined in **config.py**)
 
 
-|Training process|Iteration 3000, 28x28|
+|Training process, 28x28|Iteration 3000|
 |---|---|
 |![](assets/mnist_result.gif)|![](assets/mnist_3000.jpg)|
 
@@ -66,7 +66,7 @@ Generated images in training process are stored in **train_image_cifar10** (defi
 
 Generated images in test are stored in **test_image_cifar10** (defined in **config_cifar10.py**)
 
-|Training process|Iteration 30000, 32x32|
+|Training process, 32x32| Iteration 30,000 |
 |---|---|
 |![](assets/cifar10_result.gif)|![](assets/cifar10_30000.jpg)|
 
@@ -123,6 +123,6 @@ Generated images in test are stored in **test_image** (defined in **config.py**)
 
 Example of Oxford IIIT Pet dataset [ http://www.robots.ox.ac.uk/~vgg/data/pets/ ]
 
-Training process|Iteration 20000, 128x128|
-|---|---|
-|![](assets/iiit_pet_result.gif)|![](assets/iiit_pet_20000.jpg)|
+Training process, 128x128|Iteration 15,000 | Iteration 20,000 |
+|---|---|---|
+|![](assets/iiit_pet_result.gif)|![](assets/iiit_pet_15000.jpg)|![](assets/iiit_pet_20000.jpg)|

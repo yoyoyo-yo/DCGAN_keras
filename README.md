@@ -14,12 +14,9 @@ I recommend using Python3, and ***strongly recommend GPU when training (cifar10,
 When using CPU
 
 ```bash
+When using CPU,
 $ pip install -r requirements.txt
-```
-
-When using GPU
-
-```bash
+When using GPU,
 $ pip install -r requirements_gpu.txt
 ```
 
@@ -74,15 +71,12 @@ Generated images in test are stored in **test_image_cifar10** (defined in **conf
 |---|
 |![](assets/cifar10_loss.png)|
 
+### Usage
+
+```bash
 When training,
-
-```bash
 $ python main_cifar10.py --train
-```
-
 When testing,
-
-```bash
 $ python main_cifar10.py --test
 ```
 
@@ -103,15 +97,12 @@ Train_dirs = [
 ]
 ```
 
+### Usage
+
+```bash
 When training,
-
-```bash
 $ python main.py --train
-```
-
 When testing,
-
-```bash
 $ python main.py --test
 ```
 

@@ -65,9 +65,13 @@ Generated images in training process are stored in **train_image_cifar10** (defi
 
 Generated images in test are stored in **test_image_cifar10** (defined in **config_cifar10.py**)
 
-|Training process|Iteration 30000, 32x32|Loss|
-|---|---|---|
-|![](assets/cifar10_result.gif)|![](assets/cifar10_30000.jpg)|![](assets/cifar10_loss.png)|
+|Training process|Iteration 30000, 32x32|
+|---|---|
+|![](assets/cifar10_result.gif)|![](assets/cifar10_30000.jpg)|
+
+|Loss|
+|---|
+|![](assets/cifar10_loss.png)|
 
 When training,
 

@@ -3,7 +3,7 @@ import os
 ## Network config
 ##  Input width and Height
 #Height, Width = 28, 28  # MNIST
-Height, Width = 64, 64
+Height, Width = 128, 128
 Channel = 3
 
 # input data shape
@@ -12,7 +12,10 @@ Input_type = 'channels_last'
 
 ## Directory paths for training
 Train_dirs = [
-    '/home/usrs/nagayosi/Dataset/Moca',
+    '/home/usrs/nagayosi/Dataset/oxford_iiit_pet/',
+#    '/home/usrs/nagayosi/Dataset/EnglishText_Images',
+#    '/home/usrs/nagayosi/Dataset/Woman/Train/Images',
+#    '/home/usrs/nagayosi/Dataset/Moca',
 #    '/home/usrs/nagayosi/Dataset/Tsugumi',
 #    '/home/usrs/nagayosi/Dataset/Tsumugi',
 #    '/home/usrs/nagayosi/Dataset/Megumi',
@@ -21,15 +24,18 @@ Train_dirs = [
 ]
 
 ## Data augmentation
-Horizontal_flip = True
+Horizontal_flip = False
 Vertical_flip = False
 Rotate_ccw90 = False
 
 File_extensions = ['.jpg', '.png']
 
 ## Training config
-Iteration = 10000
-Minibatch = 64
+Iteration = 50000
+Minibatch = 128
+
+### Use or not history training (past generated images)
+Use_history = False
 
 ## Test config
 ## The total number of generated images is Test_Minibatch * Test_num

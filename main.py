@@ -32,8 +32,8 @@ class Main_train():
         pass
 
     def train(self):
-        g_opt = keras.optimizers.Adam(lr=0.0001, beta_1=0.5)
-        d_opt = keras.optimizers.Adam(lr=0.0001, beta_1=0.5)
+        g_opt = keras.optimizers.Adam(lr=0.0002, beta_1=0.5)
+        d_opt = keras.optimizers.Adam(lr=0.0002, beta_1=0.5)
         ## Load network model
         g = G_model(Height=Height, Width=Width, channel=Channel)
         d = D_model(Height=Height, Width=Width, channel=Channel)
@@ -64,6 +64,9 @@ class Main_train():
         f = open(fname, 'w')
         f.write("Step,G_loss,D_loss{}".format(os.linesep))
 
+        # Store prior generator's output
+        g_output_history = np.zeros((cf.Minibatch, Height, Width, Channel), dtype=np.float32)
+
         for ite in range(cf.Iteration):
             ite += 1
             # Discremenator training
@@ -71,7 +74,18 @@ class Main_train():
             input_noise = np.random.uniform(-1, 1, size=(cf.Minibatch, 100))
             #input_noise = np.random.normal(0, 0.3, size=(cf.Minibatch, 100))
             g_output = g.predict(input_noise, verbose=0)
-            X = np.concatenate((y, g_output))
+
+            # use past generated images for training proposed by sim-GAN
+            if cf.Use_history:
+                if ite == 1:
+                    g_output_history = g_output
+                else:
+                    g_output_history[:cf.Minibatch // 2] = g_output[:cf.Minibatch // 2]
+                np.random.shuffle(g_output_history)
+            else:
+                g_output_history = g_output
+
+            X = np.concatenate((y, g_output_history))
             Y = [1] * cf.Minibatch + [0] * cf.Minibatch
             d_loss = d.train_on_batch(X, Y)
             # Generator training
@@ -89,7 +103,7 @@ class Main_train():
                 for i in range(cf.Save_train_step):
                     con += '>'
             con += '| '
-            con += "Step:{}, g: {:.9f}, d: {:.9f} ".format(ite, g_loss, d_loss)
+            con += "Iteration:{}, g: {:.9f}, d: {:.9f} ".format(ite, g_loss, d_loss)
             sys.stdout.write("\r"+con)
 
             if ite % cf.Save_train_step == 0 or ite == 1:

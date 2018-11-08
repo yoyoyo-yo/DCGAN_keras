@@ -2,8 +2,6 @@ import keras
 from keras.models import Sequential, Model
 from keras.layers import Conv2D, MaxPooling2D, Dense, Dropout, Activation, Flatten, Input, BatchNormalization, Reshape, UpSampling2D, LeakyReLU, Activation, Conv2DTranspose
 
-import config as cf
-
 from keras.initializers import RandomNormal as RN, Constant
 
 def G_model(Height, Width, channel=3):
@@ -69,7 +67,7 @@ def D_model(Height, Width, channel=3):
     x = LeakyReLU(alpha=0.2)(x)
     #x = BatchNormalization(momentum=0.9, epsilon=1e-5, name='d_conv4_bn')(x)
     x = Flatten()(x)
-    #x = Dense(2048, activation='relu', name='d_dense1',
+    #x = Dense(4096, activation='relu', name='d_dense1',
     #    kernel_initializer=RN(mean=0.0, stddev=0.02), bias_initializer=Constant())(x)
     x = Dense(1, activation='sigmoid', name='d_out',
         kernel_initializer=RN(mean=0.0, stddev=0.02), bias_initializer=Constant())(x)

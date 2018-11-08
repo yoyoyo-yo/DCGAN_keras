@@ -49,9 +49,13 @@ $ python main_mnist.py --test
 Generated images are stored in **test_images** directory. (This pass is defined in **config.py**)
 
 
-|Training process|Iteration 3000, 28x28|Loss|
-|---|---|---|
-|![](assets/mnist_result.gif)|![](assets/mnist_3000.jpg)|![](assets/mnist_loss.png)|
+|Training process|Iteration 3000, 28x28|
+|---|---|
+|![](assets/mnist_result.gif)|![](assets/mnist_3000.jpg)|
+
+|Loss|
+|---|
+|![](assets/mnist_loss.png)|
 
 ## Cifar10 example
 

@@ -61,16 +61,10 @@ if not Input_type in variety:
     raise Exception("unvalid Input_type")
 
 #os.system("rm {}/*".format(Save_train_img_dir))
-import platform
-python_version = int(platform.python_version_tuple()[0])
-if python_version == 3:
-    os.makedirs(Save_dir, exist_ok=True)
-    os.makedirs(Save_train_img_dir, exist_ok=True)
-    os.makedirs(Save_test_img_dir, exist_ok=True)
-elif python_version == 2:
-    if not os.path.exists(Save_dir):
-        os.makedirs(Save_dir)
-    if not os.path.exists(Save_train_img_dir):
-        os.makedirs(Save_train_img_dir)
-    if not os.path.exists(Save_test_img_dir):
-        os.makedirs(Save_test_img_dir)
+
+if not os.path.exists(Save_dir):
+    os.makedirs(Save_dir)
+if not os.path.exists(Save_train_img_dir):
+    os.makedirs(Save_train_img_dir)
+if not os.path.exists(Save_test_img_dir):
+    os.makedirs(Save_test_img_dir)

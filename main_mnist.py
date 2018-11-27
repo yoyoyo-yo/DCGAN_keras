@@ -37,6 +37,8 @@ class Main_train():
         d = D_model(Height=Height, Width=Width, channel=Channel)
         c = Combined_model(g=g, d=d)
 
+        g.summary()
+
         g_opt = keras.optimizers.Adam(lr=0.0002, beta_1=0.5)
         d_opt = keras.optimizers.Adam(lr=0.0002, beta_1=0.5)
 
@@ -57,7 +59,9 @@ class Main_train():
         X_train = X_train[:, :, :, None]
         train_num = X_train.shape[0]
         train_num_per_step = train_num // cf.Minibatch
-
+        data_inds = np.arange(train_num)
+        max_ite = cf.Minibatch * train_num_per_step
+        
         ## Start Train
         print('-- Training Start!!')
         if cf.Save_train_combine is None:
@@ -76,17 +80,26 @@ class Main_train():
             # Discremenator training
             #y = dl_train.get_minibatch(shuffle=True)
             train_ind = ite % (train_num_per_step - 1)
-            y = X_train[train_ind * cf.Minibatch: (train_ind+1) * cf.Minibatch]
-            input_noise = np.random.uniform(-1, 1, size=(cf.Minibatch, 100))
+            if ite % (train_num_per_step + 1) == max_ite:
+                data_inds = np.random.shuffle(data_inds)
+
+            _inds = data_inds[train_ind * cf.Minibatch: (train_ind+1) * cf.Minibatch]
+            
+            x_fake = X_train[_inds]
+            y = y_train[_inds]
+            y = keras.utils.np_utils.to_categorical(y)
+            
+            z = np.random.uniform(-1, 1, size=(cf.Minibatch, 100))
             #input_noise = np.random.normal(0, 0.3, size=(cf.Minibatch, 100))
-            g_output = g.predict(input_noise, verbose=0)
-            X = np.concatenate((y, g_output))
-            Y = [1] * cf.Minibatch + [0] * cf.Minibatch
-            d_loss = d.train_on_batch(X, Y)
+            x_real = g.predict([z, y], verbose=0)
+            x = np.concatenate((x_fake, x_real))
+            t = [1] * cf.Minibatch + [0] * cf.Minibatch
+            d_loss = d.train_on_batch(x, t)
+            
             # Generator training
-            input_noise = np.random.uniform(-1, 1, size=(cf.Minibatch, 100))
+            z = np.random.uniform(-1, 1, size=(cf.Minibatch, 100))
             #input_noise = np.random.normal(0, 0.3, size=(cf.Minibatch, 100))
-            g_loss = c.train_on_batch(input_noise, [1] * cf.Minibatch)
+            g_loss = c.train_on_batch([z, y], [1] * cf.Minibatch)
 
             con = '|'
             if ite % cf.Save_train_step != 0:
@@ -108,12 +121,12 @@ class Main_train():
                 d.save_weights(cf.Save_d_path)
                 g.save_weights(cf.Save_g_path)
 
-                g_output = g.predict(input_noise, verbose=0)
+                gerated = g.predict([z, y], verbose=0)
                 # save some samples
                 if cf.Save_train_combine is True:
-                    save_images(g_output, index=ite, dir_path=cf.Save_train_img_dir)
+                    save_images(gerated, index=ite, dir_path=cf.Save_train_img_dir)
                 elif cf.Save_train_combine is False:
-                    save_images_separate(g_output, index=ite, dir_path=cf.Save_train_img_dir)
+                    save_images_separate(gerated, index=ite, dir_path=cf.Save_train_img_dir)
         f.close()
         ## Save trained model
         d.save_weights(cf.Save_d_path)

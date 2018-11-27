@@ -1,6 +1,8 @@
-# DCGAN_keras
+# conditionalDCGAN_keras
 
-This is ***unofficial*** DCGAN implemented with Keras.
+WiP
+
+This is ***unofficial*** conditional-DCGAN implemented with Keras.
 
 I confirmed using MNIST, CIFAR10 and Oxford IIIT pet dataset.
 This can train DCGAN with your own dataset.

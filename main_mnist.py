@@ -81,7 +81,7 @@ class Main_train():
             #y = dl_train.get_minibatch(shuffle=True)
             train_ind = ite % (train_num_per_step - 1)
             if ite % (train_num_per_step + 1) == max_ite:
-                data_inds = np.random.shuffle(data_inds)
+                np.random.shuffle(data_inds)
 
             _inds = data_inds[train_ind * cf.Minibatch: (train_ind+1) * cf.Minibatch]
             x_fake = X_train[_inds]

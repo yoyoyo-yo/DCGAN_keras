@@ -84,14 +84,11 @@ class Main_train():
                 data_inds = np.random.shuffle(data_inds)
 
             _inds = data_inds[train_ind * cf.Minibatch: (train_ind+1) * cf.Minibatch]
-            
             x_fake = X_train[_inds]
-            y = y_train[_inds]
-            y = keras.utils.np_utils.to_categorical(y)
             
             z = np.random.uniform(-1, 1, size=(cf.Minibatch, 100))
             #input_noise = np.random.normal(0, 0.3, size=(cf.Minibatch, 100))
-            x_real = g.predict([z, y], verbose=0)
+            x_real = g.predict([z], verbose=0)
             x = np.concatenate((x_fake, x_real))
             t = [1] * cf.Minibatch + [0] * cf.Minibatch
             d_loss = d.train_on_batch(x, t)
@@ -99,7 +96,7 @@ class Main_train():
             # Generator training
             z = np.random.uniform(-1, 1, size=(cf.Minibatch, 100))
             #input_noise = np.random.normal(0, 0.3, size=(cf.Minibatch, 100))
-            g_loss = c.train_on_batch([z, y], [1] * cf.Minibatch)
+            g_loss = c.train_on_batch([z], [1] * cf.Minibatch)
 
             con = '|'
             if ite % cf.Save_train_step != 0:
@@ -121,7 +118,7 @@ class Main_train():
                 d.save_weights(cf.Save_d_path)
                 g.save_weights(cf.Save_g_path)
 
-                gerated = g.predict([z, y], verbose=0)
+                gerated = g.predict([z], verbose=0)
                 # save some samples
                 if cf.Save_train_combine is True:
                     save_images(gerated, index=ite, dir_path=cf.Save_train_img_dir)

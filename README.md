@@ -1,5 +1,7 @@
 # DCGAN_keras
 
+日本語はこちら >> https://github.com/yoyoyo-yo/DCGAN_keras/README_ja.md
+
 This is ***unofficial*** DCGAN implemented with Keras.
 
 I confirmed using MNIST, CIFAR10 and Oxford IIIT pet dataset.
@@ -10,8 +12,6 @@ This can train DCGAN with your own dataset.
 You can get python packages.
 
 I recommend using Python3, and ***strongly recommend GPU when training (cifar10, original your own dataset with large iteration, minibatch and size ( >= 32x32).***
-
-When using CPU
 
 ```bash
 When using CPU,

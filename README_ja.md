@@ -1,6 +1,6 @@
 # DCGAN_keras
 
-English is here >> https://github.com/yoyoyo-yo/DCGAN_keras/README.md
+English is here >> https://github.com/yoyoyo-yo/DCGAN_keras/blob/master/README.md
 
 これはDCGANの非公式なKeras実装です。
 

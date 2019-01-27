@@ -1,6 +1,6 @@
 # DCGAN_keras
 
-日本語はこちら >> https://github.com/yoyoyo-yo/DCGAN_keras/README_ja.md
+日本語はこちら >> https://github.com/yoyoyo-yo/DCGAN_keras/blob/master/README_ja.md
 
 This is ***unofficial*** DCGAN implemented with Keras.
 
